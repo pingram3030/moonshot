@@ -54,10 +54,16 @@ module Moonshot
 
     def delete
       should_wait = true
+      delete_confirm? || raise('Stack deletion aborted!')
       @ilog.start "Deleting #{stack_name}." do |s|
         if stack_exists?
-          cf_client.delete_stack(stack_name: @name)
-          s.success "Initiated deletion of #{stack_name}."
+          if delete_confirm?
+            cf_client.delete_stack(stack_name: @name)
+            s.success "Initiated deletion of #{stack_name}."
+          else
+            s.success "Stack deletion aborted."
+            should_wait = false
+          end
         else
           s.success "#{stack_name} does not exist."
           should_wait = false
@@ -65,6 +71,21 @@ module Moonshot
       end
 
       should_wait ? wait_for_stack_state(:stack_delete_complete, 'deleted') : true
+    end
+
+    def delete_confirm?
+      unless Moonshot.config.interactive
+        raise 'Cannot delete a stack when interactive mode is disabled!'
+      end
+
+      loop do
+        print 'Delete stack? '
+        resp = gets.chomp.downcase
+
+        return true if resp == 'yes'
+        return false if resp == 'no'
+        puts "Please enter 'yes' or 'no'!"
+      end
     end
 
     def status
