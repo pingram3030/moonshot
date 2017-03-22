@@ -134,3 +134,11 @@ SSH into the first instance in your stack by running the following command:
 ```shell
 $ moonshot ssh
 ```
+
+If any of the previous commands fail, and you'd like a full backtrace, set this
+variable and re-run the erroring command.
+
+```shell
+$ export MOONSHOT_BACKTRACE=true
+```
+
