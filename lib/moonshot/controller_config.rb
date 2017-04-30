@@ -46,8 +46,14 @@ module Moonshot
         ['dev', c.app_name, c.environment_name, Time.now.to_i].join('/')
       end
 
-      user = ENV.fetch('USER', 'default-user').gsub(/\W/, '')
-      @environment_name = "dev-#{user}"
+      if ENV['MOONSHOT_ENVIRONMENT_NAME']
+        @environment_name = ENV['MOONSHOT_ENVIRONMENT_NAME']
+      else
+        user = ENV.fetch('USER', 'default-user').gsub(/\W/, '')
+        @environment_name = "dev-#{user}"
+      end
+
+      @answer_file = ENV['MOONSHOT_ANSWER_FILE'] if ENV['MOONSHOT_ANSWER_FILE']
     end
 
     def in_account(name, &blk)

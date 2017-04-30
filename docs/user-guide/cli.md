@@ -16,14 +16,22 @@ Display debug logging. The types of things logged here are mostly
 useful only for core Moonshot developers, or if you are working on
 custom plugins.
 
-#### `--environment=NAME / -n NAME`
+## `--environment=NAME / -n NAME`
 
 *Default: dev-$USER, or as specified in the `environment_name`
 configuration option in `Moonfile.rb`.*
 
+*Environment Variable: MOONSHOT_ENVIRONMENT_NAME.*
+
 Set the application's environment, such as jsmith1 or production. This
 is used to configure the CloudFormation Stack name. Not all commands
 make use of this option.
+
+## Debugging
+
+If moonshot ever fails it will dump a short error message to the screen. To get
+a more detailed backtrace, export `MOONSHOT_BACKTRACE=true` in your shell
+session. Please provide this output if reporting a code level issue.
 
 # Core Commands
 
@@ -99,6 +107,8 @@ environments.
 #### `--answer-file=FILE / -a FILE`
 
 *Default: No answer file is used.*
+
+*Environment Variable: MOONSHOT_ANSWER_FILE.*
 
 This can be used to reference a YAML file containing values which
 should be used for stack parameters. This overrides default values,
